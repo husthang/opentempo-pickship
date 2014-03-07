@@ -33,7 +33,7 @@ java -classpath target/pickship-1.0-SNAPSHOT.jar pickship.PickShipApp external/p
 
 ### Input Data
 
-The file inventory.txt contains a serialized Inventory, which is a list of Items.
+The inventory.txt file contains a serialized Inventory, which is a list of Items.
 
 ```
 INVENTORY START
@@ -51,7 +51,7 @@ ITEM END
 INVENTORY END
 ```
 
-The files order1.txt, etc., contain a serialized Order, which in turn contains a list of (item, quantity) tuples.
+The files order1.txt, order2.txt, etc., contain a serialized Order, which in turn contains a list of (item, quantity) tuples (which I call line items).
 
 ```
 ORDER START
