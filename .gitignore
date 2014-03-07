@@ -1,3 +1,14 @@
+# Sublime Text
 *.sublime-workspace
+*.sublime-project
 
+# Mac OS X
 .DS_Store
+
+# Java
+*.class
+target/
+
+# IntelliJ IDEA
+*.iml
+.idea/
