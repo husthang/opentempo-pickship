@@ -115,11 +115,11 @@ The programming exercise requires the program to be "very good" at filling boxes
 - There is a free open-source Java constraint solver with bin packing examples.  See http://optaplanner.org.
 - "the first fit algorithm provides a fast but often non-optimal solution, involving placing each item into the first bin in which it will fit. It requires Θ(n log n) time, where n is the number of elements to be packed. The algorithm can be made much more effective by first sorting the list of elements into decreasing order (sometimes known as the first-fit decreasing algorithm), although this still does not guarantee an optimal solution, and for longer lists may increase the running time of the algorithm. It is known, however, that there always exists at least one ordering of items that allows first-fit to produce an optimal solution."
 
-One potential advantage of first-fit (descending) is that one can explain it such that another person can imagine how it would be done and how sensible it seems.  Also, I imagine that it could be efficiently implemented by humans.
+One potential advantage of first-fit (descending) is that one can explain it such that another person can imagine how it would be done.  It seems sensible.  Also, I imagine that it could be efficiently implemented by humans.
 
 Here is a bin-packing example application, using Optaplanner: http://docs.jboss.org/drools/release/6.0.1.Final/optaplanner-docs/html_single/index.html#cloudBalancingTutorial
 
-For the purposes of this exercise, I think implementing a "first fit descending" will pack well enough and demonstrate my ability to code an algorithm.  The program design should be modular enough that an external library, such as Optaplanner, or a more accurate algorithm from http://www.or.deis.unibo.it/kp/Chapter8.pdf could be used.
+For the purposes of this exercise, I think "first fit descending" will pack boxes well enough and demonstrate my ability to code an algorithm.  The program design should be modular enough that an external library, such as Optaplanner, or a more accurate algorithm from http://www.or.deis.unibo.it/kp/Chapter8.pdf could be used.
 
 Note that for small orders, a brute-force algorithm could be fast enough.  I imagine in a production system, one might have a system that produces optimal fits for small orders and approximate ones for larger orders.  
 
@@ -165,8 +165,6 @@ Some conditions not yet checked or tested:
 - Duplicate item codes in inventory.
 - Weights larger than box size.
 
-Throwing Exception.  Should throw exceptions that are more specialized and more informative (e.g. At what line did parsing fail?)
-
 For the sake of demonstration, one unit test was implemented.  Production code should have much better test coverage as well as specialized exception classes with informative error messages.  For example, a parsing error could result in a ParsingException specifying what line the error occurred at and what specifically was wrong, like missing an Item Code.
 
 
@@ -194,11 +192,11 @@ Since it has been a while since I've written Java, so I started by installing Ja
 
 After studying the input and output file descriptions and examples, I wrote some basic classes (Order, Item, Inventory, LineItem, Box, ...).  I then wrote parsers for Inventory and Orders.  That was quickly followed by serializers for those classes.  While not necessary for the problem, they allowed me to check that I could make a parse-the-serialize round trip without losing any information.  After writing a PickShip serializer, I extracted the serializers out of the main app class (PickShipApp) into their own classes, to keep the classes tidy and small.
 
-Next came algorithmics.  I decided on a simple API for the bin packing algorithm itself, which left the application with the task of transforming an order into the algorithm input and the output into a PickShip.  That was a bit tricky.  Finally, I implemented a very simple packing algorithm, which I tested on the 3 example orders.  Then I implemented the First Fit Descending algorithm.  This was complicated by the API constraint I had set myself.  Thankfully, StackOverflow has an answer for everything, including get a sorted list of indices of an array.  This is something that I'd encountered in R before, which allows one to "sort" an array without losing information about the original position of the elements.  Time complexity of the First Fit Descending algorithm is O(nlogn).  However, my implementation is O(n^2), since I am simply scanning the list of bins (for each item) to find where to put an item and the size of that list is O(n), where n is the number of items.
+Next came algorithmics.  I decided on a simple API for the bin packing algorithm itself, which left the application with the task of transforming an Order into the algorithm input and then the output into a PickShip.  That park was a bit tricky.  Finally, I implemented a very simple packing algorithm, which I tested on the 3 example orders.  Then I implemented the First Fit Descending algorithm.  This was complicated by the API constraint I had set myself.  Thankfully, StackOverflow has an answer for everything, including how to get a sorted list of indices of an array.  This is something that I'd encountered in R before, which allows one to "sort" an array without losing information about the original position of the elements.  By using a 2-3 tree for the residual capacities of bins, the time complexity of the First Fit Descending algorithm can be O(nlogn).  However, my implementation is O(n^2), since I am simply scanning the list of bins (for each item) to find where to put an item and the size of that list is O(n), where n is the number of items.
 
 Now that the program was working, I tackled the hard parts: deployment, documentation, and testing.  Being new to Maven and JUnit, I trudged up the learning curve enough to get some token functionality.
 
 The vast majority of the problems I encountered were of the type: How do I do X?  I'll google it.  How do I install Maven?  How do I tell the compiler I'm using Java 7?  How do I parse a file line-by-line?  How do I split a string?  How do I sum a list of numbers?   What are Generics?  
 
-I encountered a more interesting software design problem when I tried to test parsing the inventory file.  My parser took a filename as input.  While this seemed reasonable before I tried to test it, it complicated testing.  Was I to write a temporary file during the unit, in order to test the parser?  Instead, I changed the parser to take a list of strings.  While not ideal for large files, that would suffice for this exercise. 
+I encountered a more interesting software design problem when I tried to test parsing the inventory file.  My parser took a filename as input.  While this seemed reasonable before I tried to test it, it complicated testing.  Was I to write a temporary file during the unit test, in order to test the parser?  Instead, I changed the parser to take a list of strings.  While not ideal for large files, that would suffice for this exercise. 
 
