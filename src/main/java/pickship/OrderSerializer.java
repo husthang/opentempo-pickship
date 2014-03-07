@@ -13,14 +13,13 @@ import java.util.List;
 public class OrderSerializer {
     private enum OrderParseState {START, ORDER, NUMBER, CODE, ITEM, END}
 
-    public static Order parse(String filePath, Inventory inventory) throws Exception {
+    public static Order parse(List<String> lines, Inventory inventory) throws Exception {
         OrderParseState state = OrderParseState.START;
-        Path file = Paths.get(filePath);
         int number = -1;
         String customerCode = "";
         List<LineItem> lineItems = new ArrayList<>();
 
-        for (String line : Files.readAllLines(file, Charset.defaultCharset())) {
+        for (String line : lines) {
             line = line.trim();
             // Skip all blank lines
             if (line.equals("")) {

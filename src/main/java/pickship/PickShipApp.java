@@ -2,6 +2,10 @@ package pickship;
 
 import pickship.packer.FirstFitDescendingPacker;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -35,12 +39,14 @@ public class PickShipApp {
     	String orderFile = args[1];
 
     	// Parse inventory
-    	Inventory inventory = InventorySerializer.parse(inventoryFile);
+        List<String> inventoryLines = Files.readAllLines(Paths.get(inventoryFile), Charset.defaultCharset());
+    	Inventory inventory = InventorySerializer.parse(inventoryLines);
         // Confirm that parsing of Inventory looks good.
         // System.out.println(InventorySerializer.serialize(inventory));
 
         // Parse order
-    	Order order = OrderSerializer.parse(orderFile, inventory);
+        List<String> orderLines = Files.readAllLines(Paths.get(orderFile), Charset.defaultCharset());
+    	Order order = OrderSerializer.parse(orderLines, inventory);
         // Confirm that parsing of Order looks good.
         // System.out.println(OrderSerializer.serialize(order));
 

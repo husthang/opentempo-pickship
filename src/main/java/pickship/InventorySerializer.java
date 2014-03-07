@@ -14,16 +14,15 @@ public class InventorySerializer {
 
     private enum InventoryParseState {START, INVENTORY, ITEM, CODE, NAME, WEIGHT, END}
 
-    public static Inventory parse(String filePath) throws Exception {
+    public static Inventory parse(List<String> lines) throws Exception {
 
         InventoryParseState state = InventoryParseState.START;
-        Path file = Paths.get(filePath);
         List<Item> items = new ArrayList<>();
         String code = "";
         String name = "";
         double weight = -1.0;
 
-        for (String line : Files.readAllLines(file, Charset.defaultCharset())) {
+        for (String line : lines) {
             line = line.trim();
             // Skip all blank lines
             if (line.equals("")) {
